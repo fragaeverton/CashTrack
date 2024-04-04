@@ -3,7 +3,8 @@ const router = express.Router();
 const transactionController = require('../controllers/transactions');
 
 
+router.get('/:id', transactionController.getAllTransactionsByID);
+
 router.get('/', transactionController.getAllTransactions);
-//router.get('/todos/:id', todoController.getTodoById);
 
 module.exports = router;

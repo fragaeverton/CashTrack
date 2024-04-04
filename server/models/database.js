@@ -1,4 +1,5 @@
 const mysql = require('mysql');
+const { errorConnect } = require('../errorHandler');
 
 const pool = mysql.createPool({
   connectionLimit: 10,        
@@ -12,10 +13,23 @@ const pool = mysql.createPool({
 
 pool.getConnection((err) => {
   if (err) {
-    console.error('Error connecting to MySQL database:', err);
+    errorConnect(err, 'Error connecting to MySQL database:');
     return;
   }
   console.log('Connected to MySQL database');
 });
 
-module.exports = pool;
+
+function executeQuery(query, params) {
+  return new Promise((resolve, reject) => {
+      pool.query(query, params, (error, results) => {
+      if (error) {
+          reject(error);
+      } else {
+          resolve(results);
+      }
+      });
+  });
+}
+
+module.exports = executeQuery;

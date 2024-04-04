@@ -1,16 +1,21 @@
 const Transaction = require('../models/transactions');
 
+const handleAsync = (fn) => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch((error) => {
+        errorRequest(res, error, 'Error fetching transactions:');
+    });
+};
+
+const { errorRequest } = require('../errorHandler');
+
 const transactionController = {
-    getAllTransactions: async (req, res) => {
-        try {
-            const transactions = await Transaction.getAll();
-            res.json(transactions);
-        } catch (error) {
-            console.error('Error fetching transactions:', error);
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    },
-    // You can add more controller methods for specific operations like creating, updating, deleting transactions
+    getAllTransactions: handleAsync(async (req, res) => {
+        res.json(await  Transaction.getAll());
+    }),
+
+    getAllTransactionsByID: handleAsync(async (req, res) => {
+        res.json(await Transaction.getByID(req.params.id));
+    }),
 };
 
 module.exports = transactionController;
