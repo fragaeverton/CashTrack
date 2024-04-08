@@ -4,7 +4,7 @@ import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 
-function Header(){
+function Header({ isLoggedIn, onLogout }){
     return(        
         <Navbar bg="dark" variant="dark" expand="lg">
             <div className="container">
@@ -18,7 +18,15 @@ function Header(){
                             <Nav.Link  as={Link} to="/reports">Reports</Nav.Link>
                         </Nav>
                         <Nav>
-                            <Button variant="primary">Login</Button>
+                        {isLoggedIn ? (
+                            <Button variant="primary" onClick={onLogout}>
+                            Logout
+                            </Button>
+                        ) : (
+                            <Button variant="primary" as={Link} to="/login">
+                            Login
+                            </Button>
+                        )}
                         </Nav>
                     </div>
                 </Navbar.Collapse>
